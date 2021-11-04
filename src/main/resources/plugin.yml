@@ -1,0 +1,6 @@
+name: WallImages
+version: '${project.version}'
+main: ru.sidey383.wallimages.WallImages
+api-version: 1.15
+authors: [ sidey383 ]
+description: Create images on maps
