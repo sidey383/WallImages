@@ -4,12 +4,12 @@ import java.awt.Image;
 
 public interface ImagePreparator {
 
-	static final int height = 128;
+	public static final int height = 128;
 	
-	static final int width = 128;
+	public static final int width = 128;
 	
 	public ImagePreparator setImage(Image image);
 	
-	public Image[][] getImages();
+	public byte[][][] getImages();
 	
 }

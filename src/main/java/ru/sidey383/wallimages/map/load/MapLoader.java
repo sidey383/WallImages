@@ -2,27 +2,24 @@ package ru.sidey383.wallimages.map.load;
 
 import java.util.HashMap;
 
-import javax.annotation.Nullable;
 
 public class MapLoader {
 	
 	private final static int dataSize = 128*128;
 	
-	private HashMap<Integer, Boolean> isLoadad = new HashMap<>();
+	private HashMap<Integer, Boolean> isLoaded = new HashMap<>();
 	
 	public boolean isLoaded(int mid) {
-		return isLoaded(mid) == true;
+		return isLoaded.get(mid);
 	}
-	
-	@Nullable
+
 	public byte[] loadMap(int id) {
 		byte[] b = getMapBytes(id);
 		if(b != null)
 			setLoaded(id);
 		return b;
 	}
-	
-	@Nullable
+
 	private byte[] getMapBytes(int id) {
 		//make reader
 		return new byte[dataSize];
@@ -39,7 +36,7 @@ public class MapLoader {
 	}
 	
 	private void setLoaded(int id) {
-		isLoadad.put(id, true);
+		isLoaded.put(id, true);
 	}
 	
 }

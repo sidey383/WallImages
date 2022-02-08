@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import ru.sidey383.wallimages.Callback;
 import ru.sidey383.wallimages.WallImages;
 import ru.sidey383.wallimages.map.MapManager;
-import ru.sidey383.wallimages.map.db.MapsImage;
+import ru.sidey383.wallimages.map.db.MapImageInfo;
 
 public class MapListGui extends GUIInventory {
 
@@ -42,11 +42,11 @@ public class MapListGui extends GUIInventory {
 	
 	public static String inventoryName = "mapList";
 	
-	private UUID mapOwner;
+	private final UUID mapOwner;
 	private int page = 0;
 	
 
-	private final ArrayList<List<MapsImage>> maps = new ArrayList<>();
+	private final ArrayList<List<MapImageInfo>> maps = new ArrayList<>();
 	
 	public MapListGui(UUID mapOwner, InventoryHolder previousInventory) {
 		inventory = Bukkit.createInventory(this, inventorySize, inventoryName);
@@ -69,12 +69,10 @@ public class MapListGui extends GUIInventory {
 		updateInventory();
 	}
 	
-	public void clickOnItem(MapsImage entry) {
+	public void clickOnItem(MapImageInfo entry) {
+		MapGui gui = new MapGui(entry);
 	}
-	
-	/**
-	 * @return false if cant create this page
-	 * **/
+
 	public void updateInventory() {
 		MapManager mapManager = WallImages.getMapManager();
 		if(mapManager != null) {
@@ -82,19 +80,21 @@ public class MapListGui extends GUIInventory {
 			ItemStack nextPage = new ItemStack(nextPageItemMaterial);
 			ItemStack back = new ItemStack(backPageItemMaterial);
 			ItemMeta meta = prevPage.getItemMeta();
-			meta.setDisplayName(prevPageItemName);
-			prevPage.setItemMeta(meta);
-			meta = nextPage.getItemMeta();
-			meta.setDisplayName(nextPageItemName);
-			nextPage.setItemMeta(meta);
-			meta = back.getItemMeta();
-			meta.setDisplayName(backPageItemName);
-			back.setItemMeta(meta);
+			if(meta != null) {
+				meta.setDisplayName(prevPageItemName);
+				prevPage.setItemMeta(meta);
+				meta = nextPage.getItemMeta();
+				meta.setDisplayName(nextPageItemName);
+				nextPage.setItemMeta(meta);
+				meta = back.getItemMeta();
+				meta.setDisplayName(backPageItemName);
+				back.setItemMeta(meta);
+			}
 			inventory.setItem(nextPageItemSlot, nextPage);
 			inventory.setItem(prevPageItemSlot, prevPage);
 			inventory.setItem(backPageItemSlot, back);
 			int callbackPage = page;
-			Callback<List<MapsImage>> callback = (e) -> {
+			Callback<List<MapImageInfo>> callback = (e) ->
 				Bukkit.getScheduler().runTask(WallImages.getInstance(), ()->{
 					maps.set(callbackPage, e);
 					if(callbackPage != page) return;
@@ -102,17 +102,15 @@ public class MapListGui extends GUIInventory {
 						inventory.setItem(i, buildMapItem(e.get(i)));
 					}
 				});
-
-			};
-			mapManager.loadImagesByOwnerAsynch(callback, mapOwner, pageSize, page);
+			mapManager.loadImagesInfoByOwner(callback, mapOwner, pageSize, page);
 		}
 	}
 	
-	private ItemStack buildMapItem(MapsImage image) {
+	private ItemStack buildMapItem(MapImageInfo image) {
 		ItemStack item = new ItemStack(Material.PAINTING);
 		ItemMeta meta =	item.getItemMeta();
 		meta.setDisplayName(formatString(paintingName, image, noOwner));
-		meta.setLore(paintingLore.stream().map((e) -> {return formatString(e, image, noOwner);}).collect(Collectors.toList()));
+		meta.setLore(paintingLore.stream().map(e -> formatString(e, image, noOwner)).collect(Collectors.toList()));
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -140,17 +138,17 @@ public class MapListGui extends GUIInventory {
 			return;
 		}
 		
-		if(maps != null && page < maps.size() && slot < maps.get(page).size()) {
+		if(page < maps.size() && slot < maps.get(page).size()) {
 			clickOnItem(maps.get(page).get(slot));
 			return;
 		}
 	}
 	
-	public static String formatString(String str, MapsImage entry, String noOwner) {
+	public static String formatString(String str, MapImageInfo entry, String noOwner) {
 		if(entry == null || str == null)
 			return str == null? "": null;
 		OfflinePlayer player = Bukkit.getOfflinePlayer(entry.getOwner());
-		if(player != null && player.getName() != null)
+		if(player.getName() != null)
 			str = str.replace("%username%", player.getName());
 		else
 			str = str.replace("%username%", noOwner);

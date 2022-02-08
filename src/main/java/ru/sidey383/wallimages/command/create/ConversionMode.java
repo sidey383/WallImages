@@ -8,7 +8,7 @@ public enum ConversionMode {
 	
 	List<String> alias;
 	
-	private ConversionMode(List<String> alias) {
+	ConversionMode(List<String> alias) {
 		this.alias = alias;
 	}
 	

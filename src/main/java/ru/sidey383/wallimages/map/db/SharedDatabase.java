@@ -43,7 +43,7 @@ public interface SharedDatabase {
 	public class MapData {
 		
 		public int mapID; //primary key
-		public char[] data; //not null
+		public byte[] data; //not null
 	
 	}
 	

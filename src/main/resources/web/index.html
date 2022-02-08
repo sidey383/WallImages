@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style type="text/css">
+	TD {
+		border-left: 1px solid #CCCCCC;
+	    border-right: 1px solid #CCCCCC;
+	    border-top: 1px solid #CCCCCC;
+	    border-bottom: 1px solid #CCCCCC;
+	}
+.maps {
+  border-collapse: collapse;
+  height: 100%;
+  width: 100%;
+}
+.maps > tbody > tr > td {
+  border: none;
+  padding: 0px;
+}
+  </style>
+<style>
+body {
+background-color: #808080
+}
+</style>
+<title>map generator</title>
+<meta charset="utf-8">
+</head>
+<body>
+	<div id="drop-area">
+		<p>Загрузите изображения с помощью диалога выбора файлов или
+			перетащив нужные изображения в выделенную область</p>
+		<input type="file" accept="image/*" onchange="save(this.files)"><br>
+		<canvas id="image1" width="500px" height="500px"></canvas> <br> 
+		<input type="number" id="width" value="1"><br>
+		<input type="number" id="height" value="1"><br>
+		<input type="button" value="Преобразовать в карты" id="gsdsd" onclick="paint()" />
+		<button id="sendData" onclick="send()">Сохранить карту</button>
+		<canvas id="image2" width="128px" height="128px"></canvas> <br>
+		<table id="maps"></table>>
+	</div>
+	<script src="./images.js"></script>
+	<script src="./minecraftColors.js"></script>
+	<canvas hidden id="helpCanvas"></canvas>
+</body>
+</html>
+

@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+import org.bukkit.map.MapPalette;
 import ru.sidey383.wallimages.image.ImagePreparator;
 
 public class FullImagePreparator implements ImagePreparator{
@@ -18,7 +19,7 @@ public class FullImagePreparator implements ImagePreparator{
 	}
 
 	@Override
-	public BufferedImage[][] getImages() {
+	public byte[][][] getImages() {
 		if(image == null) return null;
 		
 		int iwidth = image.getWidth(null);
@@ -42,7 +43,11 @@ public class FullImagePreparator implements ImagePreparator{
 				Graphics2D gr = images[x][y].createGraphics();
 				gr.drawImage(image, xoffset - x*width, yoffset - y*height, iwidth, iheight, new Color(0, 0, 0, 0), null);
 			}
-		return images;
+		byte[][][] data = new byte[ximage][yimage][width*height];
+		for(int x = 0; x < ximage; x++)
+			for(int y = 0; y < yimage; y++)
+				data[x][y] = MapPalette.imageToBytes(images[x][y]);
+		return data;
 	}
 	
 	

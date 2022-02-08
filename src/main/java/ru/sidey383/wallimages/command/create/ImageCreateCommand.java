@@ -11,7 +11,7 @@ public class ImageCreateCommand implements CommandExecutor {
 
 	public static String onSuccess;
 	public static String onFail;
-	private JavaPlugin plugin;
+	private final JavaPlugin plugin;
 	
 	public ImageCreateCommand(JavaPlugin plugin) {
 		this.plugin = plugin;
@@ -54,10 +54,10 @@ public class ImageCreateCommand implements CommandExecutor {
 		Player owner = null;
 		if(sender instanceof Player)
 			owner = (Player) sender;
-		MapCreateResponce mresp = new MapCreateResponce(owner, iresp.buildPreparator(), 
-				()->{sender.sendMessage(onSuccess);}, 
-				()->{sender.sendMessage(onFail);});
-		Bukkit.getScheduler().runTaskAsynchronously(plugin, ((Runnable)mresp::run)::run );
+		MapCreateResponce mresp = new MapCreateResponce(owner, iresp.buildPreparator(),
+				() -> sender.sendMessage(onSuccess),
+				() -> sender.sendMessage(onFail));
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, mresp );
 		return true;
 	}
 	
